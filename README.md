@@ -1,13 +1,26 @@
 # Timed Modifiers API
 This is an API that allows you to add temporary attribute modifiers that gets removed after a set amount of time.
 
+If you are a **player**, simply download and add this to your mod folder.  
+If you are a **developer**, please read the following to learn how to use this API.
+
 ### This is an API and does not add new gameplay features. This is just used as a dependency.
 
-# For players
-Simply download this and add this to your mod folder.
-
-# For developers
 ## Set up
+Add this to the build.gradle to depend on this API.
+```
+repositories {
+    maven {
+        url = "https://api.modrinth.com/maven"
+    }
+}
+
+dependencies {
+    modImplementation "maven.modrinth:timed_modifiers_api:{the_version}"
+}
+```
+
+The version number will be in the form ```x.y.z+[mc_version]```, e.g. ```1.0.0+1.21.7```.
 
 ## How to use
 ### Example Modifier
@@ -46,6 +59,8 @@ TimedModifierAPI.addModifier(player, EntityAttributes.MOVEMENT_SPEED, modifier, 
 //Lasts 60 ticks (3 seconds), value increases from +60% to +120% in 30 ticks (1.5 seconds)
 ```
 
+***
+
 ### Remove modifier
 This manually removes a temporary modifier before it expires.
 ```
@@ -56,6 +71,8 @@ TimedModifierAPI.removeModifier(living_entity, attribute_type, identifier);
 ```
 TimedModifierAPI.addModifier(player, EntityAttributes.MOVEMENT_SPEED, modifier.id());
 ```
+
+***
 
 ### Clear modifier
 This removes all temporary modifiers added via this API.
@@ -68,6 +85,8 @@ TimedModifierAPI.clearModifier(living_entity, attribute_type);
 TimedModifierAPI.clearModifier(player, EntityAttributes.MOVEMENT_SPEED);
 ```
 
+***
+
 ### Get duration
 This retrieves the remaining duration (in ticks) of a specific temporary modifier.
 ```
@@ -78,6 +97,8 @@ TimedModifierAPI.getDuration(living_entity, attribute_type, identifier);
 ```
 TimedModifierAPI.getDuration(player, EntityAttributes.MOVEMENT_SPEED, modifier.id());
 ```
+
+***
 
 ### Alternative 1
 Instead of calling ```TimedModifierAPI``` over and over again, you can simply cast the entity to ```ITimedModifier``` and access the methods.
@@ -104,6 +125,9 @@ itm.clearModifier(EntityAttributes.MOVEMENT_SPEED);
 //get duration
 itm.getDuration(EntityAttributes.MOVEMENT_SPEED, modifier.id());
 ```
+
+***
+
 ### Alternative 2
 If you find writing EntityAttributes.XYZ too repetitive, you can even retrieve the ```TimedModifierContainer``` of that attribute.
 
