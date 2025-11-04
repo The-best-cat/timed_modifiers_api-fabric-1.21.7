@@ -1,0 +1,39 @@
+{
+	"schemaVersion": 1,
+	"id": "timed_modifier_api",
+	"version": "${version}",
+	"name": "Timed Modifiers API",
+	"description": "This is an API for developers to add modifiers that expires and gets removed after a specific amount of time.",
+	"authors": [
+		"The Black Cat"
+	],
+	"contact": {
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "MIT",
+	"icon": "assets/timed_modifier_api/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+          "net.theblackcat.timed_modifier_api.TimedModifiers"
+		],
+		"fabric-datagen": [
+          "net.theblackcat.timed_modifier_api.TimedModifiersDataGenerator"
+		]
+	},
+	"mixins": [
+		"timed_modifier_api.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.17.3",
+		"minecraft": "~1.21.7",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	},
+    "custom": {
+        "modemenu:api": true
+    }
+}

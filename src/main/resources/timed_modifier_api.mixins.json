@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "net.theblackcat.timed_modifier_api.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "LivingEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+	}
+}
