@@ -32,6 +32,8 @@ EntityAttributeModifier modifier = new EntityAttributeModifier(
 );
 ```
 
+***
+
 ### Add modifier
 This adds a temporary modifier that expires after a duration (in ticks)
 ```
@@ -44,18 +46,18 @@ TimedModifierAPI.addModifier(player, EntityAttributes.MOVEMENT_SPEED, modifier, 
 //Adds a modifier that increases speed by 60% for 60 ticks (3 seconds)
 ```
 
-You can make a modifier's value grow/decay over its lifetime. To do this, call ```.increase()``` or ```.decrease()```.
+You can make a modifier's value grow/decay over its lifetime. To do this, call ```.grow()``` or ```.decay()```.
 
-You need to provide a limit for ```.increase()```, but this is optional for ```.decrease()```.
+You need to provide a limit for ```.grow()```, but this is optional for ```.decay()```.
 
 If you want this to happen in a specific amount of time instead of over the whole lifetime, provide a duration in ticks.
 
 **Example:**
 ```
-TimedModifierAPI.addModifier(player, EntityAttributes.MOVEMENT_SPEED, modifier, 100).decrease();
+TimedModifierAPI.addModifier(player, EntityAttributes.MOVEMENT_SPEED, modifier, 100).decay();
 //Gradually decreases from +60% to 0% over 100 ticks (5 seconds)
 
-TimedModifierAPI.addModifier(player, EntityAttributes.MOVEMENT_SPEED, modifier, 60).increase(1.2, 30);
+TimedModifierAPI.addModifier(player, EntityAttributes.MOVEMENT_SPEED, modifier, 60).grow(1.2, 30);
 //Lasts 60 ticks (3 seconds), value increases from +60% to +120% in 30 ticks (1.5 seconds)
 ```
 
@@ -87,6 +89,19 @@ TimedModifierAPI.clearModifier(player, EntityAttributes.MOVEMENT_SPEED);
 
 ***
 
+### Override Modifier (Added in 1.1.0)
+This will override the current modifier, preventing the error when the same modifier is added.
+```
+TimedModifierAPI.overrideModifier(living_entity, attribute_type, modifier, duration);
+```
+
+**Example:**
+```
+TimedModifierAPI.overrideModifier(player, EntityAttributes.MOVEMENT_SPEED, modifier, 40).decay();
+```
+
+***
+
 ### Get duration
 This retrieves the remaining duration (in ticks) of a specific temporary modifier.
 ```
@@ -111,10 +126,10 @@ ITimedModifier itm = (ITimedModifier) player;
 itm.addModifier(EntityAttributes.MOVEMENT_SPEED, modifier, 60);
 
 //add modifier (increases)
-itm.addModifier(EntityAttributes.MOVEMENT_SPEED, modifier, 60).increase(1.2);
+itm.addModifier(EntityAttributes.MOVEMENT_SPEED, modifier, 60).grow(1.2);
 
 //add modifier (decreases)
-itm.addModifier(EntityAttributes.MOVEMENT_SPEED, modifier, 60).decrease();
+itm.addModifier(EntityAttributes.MOVEMENT_SPEED, modifier, 60).decay();
 
 //remove modifier
 itm.removeModifier(EntityAttributes.MOVEMENT_SPEED, modifier.id());
@@ -129,7 +144,7 @@ itm.getDuration(EntityAttributes.MOVEMENT_SPEED, modifier.id());
 ***
 
 ### Alternative 2
-If you find writing EntityAttributes.XYZ too repetitive, you can even retrieve the ```TimedModifierContainer``` of that attribute.
+If you find writing EntityAttributes.XYZ too repetitive, you can even retrieve the ```TimedModifierContainer``` of that attribute directly.
 
 **Example:**
 ```
