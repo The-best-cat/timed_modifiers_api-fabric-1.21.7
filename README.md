@@ -61,6 +61,16 @@ TimedModifierAPI.addModifier(player, EntityAttributes.MOVEMENT_SPEED, modifier, 
 //Lasts 60 ticks (3 seconds), value increases from +60% to +120% in 30 ticks (1.5 seconds)
 ```
 
+You can even select an easing type and ease the over time change. There are: Sine, Quadratic, Cubic, Quartic, Quintic and Circle.
+
+Call ```ease()``` and provide the type of easing.
+
+**Example:**
+```
+TimedModifierAPI.addModifier(player, EntityAttributes.MOVEMENT_SPEED, modifier, 100).decay().ease(EaseHelper.EasingTypes.SINE_OUT);
+//Gradually decreases from +60% to 0% over 100 ticks (5 seconds) with sine ease out
+```
+
 ***
 
 ### Remove modifier
@@ -89,7 +99,7 @@ TimedModifierAPI.clearModifier(player, EntityAttributes.MOVEMENT_SPEED);
 
 ***
 
-### Override Modifier (Added in 1.1.0)
+### Override Modifier
 This will override the current modifier, preventing the error when the same modifier is added.
 ```
 TimedModifierAPI.overrideModifier(living_entity, attribute_type, modifier, duration);
@@ -115,30 +125,64 @@ TimedModifierAPI.getDuration(player, EntityAttributes.MOVEMENT_SPEED, modifier.i
 
 ***
 
-### Alternative 1
-Instead of calling ```TimedModifierAPI``` over and over again, you can simply cast the entity to ```ITimedModifier``` and access the methods.
+### Set/Unset value
+This directly sets the value of an attribute instance, ignoring any modifiers and its base value.
+```
+TimedModifierAPI.setValue(living_entity, attribute_type, double);
+```
 
 **Example:**
 ```
-ITimedModifier itm = (ITimedModifier) player;
+TimedModifierAPI.setValue(player, EntityAttributes.MOVEMENT_SPEED, 0.088);
+```
+
+This makes the attribute instance return back to its original value.
+```
+TimedModifierAPI.unsetValue(living_entity, attribute_type);
+```
+
+***
+
+### Check if value is set/obtain the value
+This returns whether or not the attribute instance value is set.
+```
+TimedModifierAPI.isValueSet(living_entity, attribute_type);
+```
+
+This returns the value that is set, or -1 if the value isn't set.
+
+```
+TimedModifierAPI.getValueSet(living_entity, attribute_type);
+```
+
+***
+
+### Alternative 1
+Instead of calling ```TimedModifierAPI``` over and over again, you can simply cast the entity to ```ITimedModifier``` and access the methods, or just ask TimedModifierAPI to cast it.
+
+**Example:**
+```
+ITimedModifier api = (ITimedModifier) player;
+//or 
+ITimedModifier api = TimedModifierAPI.asApi(player);
 
 //add modifier
-itm.addModifier(EntityAttributes.MOVEMENT_SPEED, modifier, 60);
-
-//add modifier (increases)
-itm.addModifier(EntityAttributes.MOVEMENT_SPEED, modifier, 60).grow(1.2);
-
-//add modifier (decreases)
-itm.addModifier(EntityAttributes.MOVEMENT_SPEED, modifier, 60).decay();
+api.addModifier(EntityAttributes.MOVEMENT_SPEED, modifier, 60);
 
 //remove modifier
-itm.removeModifier(EntityAttributes.MOVEMENT_SPEED, modifier.id());
+api.removeModifier(EntityAttributes.MOVEMENT_SPEED, modifier.id());
 
 //clear modifiers
-itm.clearModifier(EntityAttributes.MOVEMENT_SPEED);
+api.clearModifier(EntityAttributes.MOVEMENT_SPEED);
 
 //get duration
-itm.getDuration(EntityAttributes.MOVEMENT_SPEED, modifier.id());
+api.getDuration(EntityAttributes.MOVEMENT_SPEED, modifier.id());
+
+//set Value
+api.setValue(EntityAttributes.MOVEMENT_SPEED, 0.088);
+
+//unset value
+api.unsetValue(EntityAttributes.MOVEMENT_SPEED);
 ```
 
 ***
@@ -150,9 +194,16 @@ If you find writing EntityAttributes.XYZ too repetitive, you can even retrieve t
 ```
 var container = TimedModifierAPI.getContainer(player, EntityAttributes.MOVEMENT_SPEED);
 //or
-ITimedModifier ita = (ITimedModifier) player;
-var container = ita.getContainer(EntityAttributes.MOVEMENT_SPEED);
+ITimedModifier api = TimedModifierAPI.asApi(player);
+var container = api.getContainer(EntityAttributes.MOVEMENT_SPEED);
 
 //and then do whatever you need
 container.addModifier(...);
+```
+
+Please note that you cannot call ```setValue()```, ```unsetValue()```, ```isValueSet()``` and ```getValueSet()``` from a container. In order to call these methods, call ```asApi()``` first.
+
+**Example**
+```
+container.asApi().setValue(25);
 ```
